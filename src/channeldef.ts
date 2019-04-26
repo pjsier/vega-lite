@@ -58,9 +58,15 @@ export type ChannelDefWithCondition<F extends FieldDef<any>, V extends Value> =
  * }
  */
 
-export type ValueDefWithCondition<F extends FieldDef<any>, V extends Value = Value> =
-  | ValueDefWithOptionalCondition<F, V>
-  | ConditionOnlyDef<F>;
+/**
+ * @minProperties 1
+ */
+export type ValueDefWithCondition<F extends FieldDef<any>, V extends Value = Value> = Partial<ValueDef<V>> & {
+  /**
+   * A field definition or one or more value definition(s) with a selection predicate.
+   */
+  condition?: Conditional<F> | Conditional<ValueDef<V>> | Conditional<ValueDef<V>>[];
+};
 
 export type StringValueDefWithCondition<F extends Field, T extends Type = StandardType> = ValueDefWithCondition<
   MarkPropFieldDef<F, T>,
@@ -140,26 +146,6 @@ export type TextFieldDefWithCondition<F extends Field> = FieldDefWithCondition<T
  *   value: ...,
  * }
  */
-
-export interface ValueDefWithOptionalCondition<FD extends FieldDef<any>, V extends Value> extends ValueDef<V> {
-  /**
-   * A field definition or one or more value definition(s) with a selection predicate.
-   */
-  condition?: Conditional<FD> | Conditional<ValueDef<V>> | Conditional<ValueDef<V>>[];
-}
-
-/**
- * A Condition<ValueDef | FieldDef> only definition.
- * {
- *   condition: {field: ...} | {value: ...}
- * }
- */
-export interface ConditionOnlyDef<F extends FieldDef<any>, V extends Value = Value> {
-  /**
-   * A field definition or one or more value definition(s) with a selection predicate.
-   */
-  condition: Conditional<F> | Conditional<ValueDef<V>> | Conditional<ValueDef<V>>[];
-}
 
 /**
  * Reference to a repeated value.
